@@ -13,7 +13,7 @@
 NAME = libftprintf.a
 FLAGS = -Wall -Werror -Wextra
 SRC = format_string.c search_format.c read_agruments.c printer.c ft_strlen.c \
-	ft_strjoin.c ft_printf.c ft_itoa_base.c
+		ft_strjoin.c ft_printf.c ft_itoa_base.c flags.c
 
 OSRC =	$(SRC:.c=.o)
 

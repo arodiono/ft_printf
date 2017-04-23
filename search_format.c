@@ -12,6 +12,35 @@
 
 #include "ft_printf.h"
 
+void	search_finish(const char *format, t_node **value)
+{
+	char *s;
+	int x;
+	int i;
+
+	s = "sSpdDioOuUxXcChljz-+ #0123456789.";
+	x = STRT + 1;
+	i = 0;
+	while (format[x] != '\0')
+	{
+		while (s[i] != '\0')
+		{
+			if (format[x] != s[i])
+				i++;
+			else if (format[x] == s[i])
+			{
+				x++;
+				i = 0;
+			}
+		}
+		if (s[i] == '\0')
+		{
+			FNSH = x;
+			return ;
+		}
+	}
+}
+
 void	search_type(const char *format, t_node **value)
 {
 	int		i;
@@ -20,7 +49,7 @@ void	search_type(const char *format, t_node **value)
 
 	types = "sSpdDioOuUxXcC";
 	r = STRT;
-	while (format[r] != '\0')
+	while (r < FNSH)
 	{
 		i = 0;
 		while (types[i] != '\0')
@@ -45,7 +74,7 @@ void	search_length(const char *format, t_node **value)
 
 	length = "hljz";
 	r = STRT;
-	while (format[r] != '\0')
+	while (r <= FNSH)
 	{
 		i = 0;
 		while (length[i] != '\0')
@@ -56,13 +85,11 @@ void	search_length(const char *format, t_node **value)
 					LNGTH = 'H';
 				else if (length[i] == 'l')
 					LNGTH = 'Z';
-				FNSH = r;
 				return ;
 			}
 			else if (length[i] == format[r])
 			{
 				LNGTH = format[r];
-				FNSH = r;
 				return ;
 			}
 			i++;
@@ -76,7 +103,7 @@ void	search_precision(const char *format, t_node **value)
 	int		r;
 
 	r = STRT;
-	while (format[r] != '\0')
+	while (r <= FNSH)
 	{
 		if (format[r] == '.')
 		{
@@ -87,7 +114,8 @@ void	search_precision(const char *format, t_node **value)
 				PRCSN = PRCSN * 10 + format[r] - '0';
 				r++;
 			}
-			FNSH = r;
+			if (format[r] > '0' && format[r] < '9')
+				PRCSN = 0;
 			return ;
 		}
 		r++;
@@ -96,12 +124,12 @@ void	search_precision(const char *format, t_node **value)
 
 void	search_width(const char *format, t_node **value)
 {
-	int		r;
+	int	r;
 
 	r = STRT;
-	while (format[r] != '\0')
+	while (r <= FNSH)
 	{
-		if (format[r] >= '0' && format[r] <= '9' && format[r - 1] != '.')
+		if (format[r] > '0' && format[r] <= '9' && format[r - 1] != '.')
 		{
 			WDTH = 0;
 			while (format[r] >= '0' && format[r] <= '9')
@@ -109,14 +137,56 @@ void	search_width(const char *format, t_node **value)
 				WDTH = WDTH * 10 + format[r] - '0';
 				r++;
 			}
-			FNSH = r;
 			return ;
 		}
 		r++;
 	}
 }
 
-void	search_flag(const char *format, t_node **value)
+void	print_bits(unsigned char octet)
+{
+	unsigned char	i;
+	int 			n;
+
+	n = 8;
+	i = 128;
+	while (n--)
+	{
+		if (octet >= i)
+		{
+			write(1, "1", 1);
+			octet -= i;
+		}
+		else
+			write(1, "0", 1);
+		i /= 2;
+	}
+}
+
+/**
+** set_bits function parameters
+** (1)	00000001 = 0
+** (2)	00000010 = +
+** (4)	00000100 = -
+** (8)	00001000 = #
+** (16)	00010000 = space
+**/
+
+void	set_bits(t_node **value, char c)
+{
+	if (c == '0' && ((FLG & ZERO) != ZERO))
+		FLG += ZERO;
+	else if (c == '+' && ((FLG & PLUS) != PLUS))
+		FLG += PLUS;
+	else if (c == '-' && ((FLG & MINUS) != MINUS))
+		FLG += MINUS;
+	else if (c == '#' && ((FLG & HASH) != HASH))
+		FLG += HASH;
+	else if (c == ' ' && ((FLG & SPACE) != SPACE))
+		FLG += SPACE;
+}
+
+void	search_flag(const char *frm, t_node **value)
 {
 	int		i;
 	int		r;
@@ -124,19 +194,21 @@ void	search_flag(const char *format, t_node **value)
 
 	flags = "-+ #0";
 	r = STRT;
-	while (format[r] != '\0')
+	while (r < FNSH)
 	{
 		i = 0;
 		while (flags[i] != '\0')
 		{
-			if (flags[i] == format[r] && format[r - 1] != '.')
+			if (flags[i] == frm[r] && frm[r - 1] != '.')
 			{
-				FLG = format[r];
-				FNSH = r;
-				return ;
+				if ((frm[r - 1] >= 48 && frm[r - 1] <= 57) && frm[r] == '0')
+					FLG = FLG;
+				else
+					set_bits(&*value, flags[i]);
 			}
 			i++;
 		}
 		r++;
 	}
+	// print_bits(FLG);
 }

@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printer.c                                          :+:      :+:    :+:   */
+/*   ft_strnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arodiono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/23 14:58:52 by arodiono          #+#    #+#             */
-/*   Updated: 2017/03/23 14:58:53 by arodiono         ###   ########.fr       */
+/*   Created: 2016/11/28 22:15:55 by arodiono          #+#    #+#             */
+/*   Updated: 2016/12/02 15:22:34 by arodiono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include <string.h>
+#include <stdlib.h>
 
-void	ft_putchar(char c)
+char	*ft_strnew(size_t size)
 {
-	write(1, &c, 1);
-}
+	char *str;
 
-int		ft_putstr(char const *s)
-{
-	int i;
-
-	i = 0;
-	if (s != NULL)
-		while (s[i] != '\0')
-			ft_putchar(s[i++]);
-	return (i);
+	str = (char*)malloc(size + 1);
+	if (str == NULL)
+		return (NULL);
+	size++;
+	while (size-- > 0)
+		str[size] = '\0';
+	return (str);
 }
