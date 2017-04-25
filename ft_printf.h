@@ -30,6 +30,12 @@
 # define MINUS	4
 # define SPACE	8
 # define HASH	16
+
+# define MASK0 0
+# define MASK1 49280
+# define MASK2 14712960
+# define MASK3 4034953344
+
 /*
 ** DELETE FROM THIS !!!!!!!!!
 */
@@ -52,6 +58,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <wchar.h>
 
 typedef struct	s_node
 {
@@ -109,6 +116,7 @@ void	format_unsigned(t_node **value);
 void	format_octal(t_node **value);
 void	format_string(t_node **value);
 void	format_char(t_node **value);
+void	read_wchar(t_node **value, va_list ap);
 void	format_pointer(t_node **value);
 
 unsigned long	get_pointer(va_list ap);

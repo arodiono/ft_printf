@@ -24,8 +24,10 @@ void	read_argument(t_node **value, va_list ap)
 		STR = ft_uitoa_base(UINT = get_unsigned(&*value, ap), 8, &*value);
 	else if (TYPE == 's')
 		read_str(&*value, ap);
-	else if (TYPE == 'c')
+	else if (TYPE == 'c' && LNGTH != 'l')
 		read_char(&*value, ap);
+	else if ((TYPE == 'c' && LNGTH == 'l') || TYPE == 'C')
+		read_wchar(&*value, ap);
 	else if (TYPE == 'p')
 	{
 		STR = ft_uitoa_base(UINT = get_pointer(ap), 16, &*value);
@@ -43,7 +45,7 @@ void	fill_struct(const char *format, t_node **value)
 	s[1] = '\0';
 	STR = s;
 	search_type(format, &*value);
-	if (TYPE == 'c')
+	if (TYPE == 'c' || TYPE == 'C')
 		STR = "";
 	search_flag(format, &*value);
 	search_width(format, &*value);
@@ -77,7 +79,7 @@ int	read_or_print(const char *format, t_node **value, va_list ap)
 			format_value(&*value);
 			// PRINT_STRUCT
 			r += ft_putstr(STR);
-			if (TYPE == 'c' && CHR == '\0')
+			if ((TYPE == 'c' || TYPE == 'C') && CHR == 0)
 			{
 				write(1, "\0", 1);
 				r += 1;

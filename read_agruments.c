@@ -39,7 +39,7 @@ uintmax_t	get_unsigned(t_node **value, va_list ap)
 		return(va_arg(ap, unsigned long int));
 	else if (LNGTH == 'Z')
 		return(va_arg(ap, unsigned long long int));
-	else if (LNGTH == 'h' && (TYPE == 'o' || TYPE == 'u'))
+	else if (LNGTH == 'h' && (TYPE == 'o' || TYPE == 'u' || TYPE == 'x' || TYPE == 'X'))
 		return((unsigned short)va_arg(ap, unsigned int));
 	// else if (LNGTH == 'h' && TYPE != 'U')
 	// 	return(va_arg(ap, unsigned int));
@@ -65,17 +65,22 @@ unsigned long	get_pointer(va_list ap)
 void	read_str(t_node **value, va_list ap)
 {
 	char *str;
-	wchar_t *strw;
+	wchar_t *s;
 
 	str = "";
-	if (LNGTH == 0)
-		str = va_arg(ap, char*);
-	else if (LNGTH == 'l')
-		strw = va_arg(ap, wchar_t*);
-	if (str == NULL)
-		STR = NULL;
+	if (TYPE == 'S' || LNGTH == 'l')
+	{
+		s = va_arg(ap, wchar_t*);
+	}
 	else
-		STR = str;
+	{
+		if (LNGTH == 0)
+			str = va_arg(ap, char*);
+		if (str == NULL)
+			STR = NULL;
+		else
+			STR = str;
+	}
 }
 void	read_char(t_node **value, va_list ap)
 {
@@ -90,5 +95,86 @@ void	read_char(t_node **value, va_list ap)
 		s = (char *)malloc(sizeof(char) + 1);
 		s[0] = c;
 		STR = s;
+	}
+}
+
+int check_size(unsigned int v)
+{
+	int i  = 0;
+	while (v > 0)
+	{
+		i++;
+		v /=2;
+	}
+	return i;
+}
+
+void	two_wchar(t_node **value, unsigned int v)
+{
+	char			*s;
+	unsigned int	mask;
+
+	mask = 49280;
+	s = (char *)malloc(sizeof(char) + 2);
+	s[0] = (mask >> 8) | (((v >> 6) << 27) >> 27);
+	s[1] = ((mask << 24) >> 24) | ((v << 26) >> 26);
+	STR = s;
+}
+
+void	three_wchar(t_node **value, unsigned int v)
+{
+	char			*s;
+	unsigned int	mask;
+
+	mask = 14712960;
+	s = (char *)malloc(sizeof(char) + 3);
+	s[0] = (mask >> 16) | (((v >> 12) << 28) >> 28);
+	s[1] = ((mask << 16) >> 24) | (((v >> 6) << 26) >> 26);
+	s[2] = ((mask << 24) >> 24) | ((v << 26) >> 26);
+	STR = s;
+}
+
+void	four_wchar(t_node **value, unsigned int v)
+{
+	char			*s;
+	unsigned int	mask;
+
+	mask = 4034953344;
+	s = (char *)malloc(sizeof(char) + 4);
+	s[0] = (mask >> 24) | (((v >> 18) << 29) >> 29);
+	s[1] = ((mask << 8) >> 24) | (((v >> 12) << 26) >> 26);
+	s[2] = ((mask << 16) >> 24) | (((v >> 6) << 26) >> 26);
+	s[3] = ((mask << 24) >> 24) | ((v << 26) >> 26);
+	STR = s;
+}
+
+void	read_wchar(t_node **value, va_list ap)
+{
+	char *s;
+	wchar_t val;
+	unsigned char octet;
+	unsigned int v;
+	int size;
+
+	val = va_arg(ap, wchar_t);
+	if (val == 0)
+		CHR = 0;
+	else
+	{
+		v = val;
+		size = check_size((unsigned int)val);
+		if (size <= 7)
+		{
+			octet = val;
+			s = (char *)malloc(sizeof(char) + 1);
+			s[0] = octet;
+			STR = s;
+		}
+		else  if (size <= 11)
+			two_wchar(&*value, v);
+		else  if (size <= 16)
+			three_wchar(&*value, v);
+		else
+			four_wchar(&*value, v);
 	}
 }

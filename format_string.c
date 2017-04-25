@@ -27,7 +27,7 @@ void	add_prcsn(t_node **value)
 	s = (char *)malloc(sizeof(char) * (PRCSN + ft_strlen(STR)) + 1);
 	if (PRCSN == 0 && INT == 0 && UINT == 0 && TYPE != 0)
 		STR = "";
-	if (TYPE != 'c')
+	if (TYPE != 'c' && TYPE != 'C')
 		while (i < (PRCSN - ft_strlen(STR)))
 			s[i++] = c;
 	s[i] = '\0';
@@ -64,7 +64,7 @@ void	add_width(t_node **value)
 
 	i = 0;
 	f = WDTH - ft_strlen(STR);
-	if (((FLG & PLUS) == PLUS && (FLG & ZERO) == ZERO) || INT < 0 || CHR == 0 || ((FLG & SPACE) == SPACE && WDTH > 0))
+	if (((FLG & PLUS) == PLUS && (FLG & ZERO) == ZERO) || INT < 0 || CHR == 0 || ((FLG & SPACE) == SPACE && WDTH > 0 && INT == 0))
 		f -= 1;
 	if ((FLG & ZERO) == ZERO && (FLG & HASH) == HASH && (TYPE == 'x' || TYPE == 'X' || TYPE == 'p') && WDTH > 0)
 		f -= 2;
