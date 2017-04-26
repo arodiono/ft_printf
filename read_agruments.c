@@ -41,8 +41,6 @@ uintmax_t	get_unsigned(t_node **value, va_list ap)
 		return(va_arg(ap, unsigned long long int));
 	else if (LNGTH == 'h' && (TYPE == 'o' || TYPE == 'u' || TYPE == 'x' || TYPE == 'X'))
 		return((unsigned short)va_arg(ap, unsigned int));
-	// else if (LNGTH == 'h' && TYPE != 'U')
-	// 	return(va_arg(ap, unsigned int));
 	else if (LNGTH == 'h')
 		return(va_arg(ap, unsigned long int));
 	else if (LNGTH == 'H' && TYPE != 'U' && TYPE != 'O')

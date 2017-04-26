@@ -18,7 +18,7 @@ void	search_finish(const char *format, t_node **value)
 	int x;
 	int i;
 
-	s = "sSpdDioOuUxXcChljz-+ #0123456789.";
+	s = "sSpdDioOuUxXcChljz-+ #0123456789.*";
 	x = STRT + 1;
 	i = 0;
 	while (format[x] != '\0')
@@ -98,7 +98,7 @@ void	search_length(const char *format, t_node **value)
 	}
 }
 
-void	search_precision(const char *format, t_node **value)
+void	search_precision(const char *format, t_node **value, va_list ap)
 {
 	int		r;
 
@@ -109,6 +109,16 @@ void	search_precision(const char *format, t_node **value)
 		{
 			r++;
 			PRCSN = 0;
+			if (format[r] == '*')
+			{
+				if ((PRCSN = va_arg(ap, int)) < 0)
+				{
+					PRCSN = -1;
+					if ((FLG & MINUS) != MINUS)
+						FLG += MINUS;
+				}
+				return ;
+			}
 			while (format[r] >= '0' && format[r] <= '9')
 			{
 				PRCSN = PRCSN * 10 + format[r] - '0';
@@ -122,20 +132,27 @@ void	search_precision(const char *format, t_node **value)
 	}
 }
 
-void	search_width(const char *format, t_node **value)
+void	search_width(const char *format, t_node **value, va_list ap)
 {
 	int	r;
 
 	r = STRT;
 	while (r <= FNSH)
 	{
-		if (format[r] > '0' && format[r] <= '9' && format[r - 1] != '.')
+		if (((format[r] > '0' && format[r] <= '9') || format[r] == '*') && format[r - 1] != '.')
 		{
 			WDTH = 0;
 			while (format[r] >= '0' && format[r] <= '9')
 			{
 				WDTH = WDTH * 10 + format[r] - '0';
 				r++;
+			}
+			if (format[r] == '*' && format[r - 1] != '.')
+			{
+				if ((WDTH = va_arg(ap, int)) < 0 && (FLG & MINUS) != MINUS)
+					FLG += MINUS;
+				WDTH < 0 ? WDTH *= -1 : WDTH;
+				return ;
 			}
 			return ;
 		}
@@ -162,15 +179,6 @@ void	print_bits(unsigned char octet)
 		i /= 2;
 	}
 }
-
-/**
-** set_bits function parameters
-** (1)	00000001 = 0
-** (2)	00000010 = +
-** (4)	00000100 = -
-** (8)	00001000 = #
-** (16)	00010000 = space
-**/
 
 void	set_bits(t_node **value, char c)
 {
@@ -210,5 +218,4 @@ void	search_flag(const char *frm, t_node **value)
 		}
 		r++;
 	}
-	// print_bits(FLG);
 }

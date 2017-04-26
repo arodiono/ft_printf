@@ -12,11 +12,6 @@
 
 #include "ft_printf.h"
 
-/*
-** Function that add a chars to string if the precision is bigger
-** than the length of the string
-*/
-
 void	add_prcsn(t_node **value)
 {
 	int i;
@@ -27,17 +22,12 @@ void	add_prcsn(t_node **value)
 	s = (char *)malloc(sizeof(char) * (PRCSN + ft_strlen(STR)) + 1);
 	if (PRCSN == 0 && INT == 0 && UINT == 0 && TYPE != 0)
 		STR = "";
-	if (TYPE != 'c' && TYPE != 'C')
+	if (TYPE != 'c' && TYPE != 'C' && STR[0] != '%')
 		while (i < (PRCSN - ft_strlen(STR)))
 			s[i++] = c;
 	s[i] = '\0';
 	STR = ft_strjoin(s, STR);
 }
-
-/*
-** Function that cuts a string if the precision is less
-** than the length of the string
-*/
 
 void	cut_prcsn(t_node **value)
 {

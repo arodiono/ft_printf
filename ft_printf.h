@@ -31,11 +31,6 @@
 # define SPACE	8
 # define HASH	16
 
-# define MASK0 0
-# define MASK1 49280
-# define MASK2 14712960
-# define MASK3 4034953344
-
 /*
 ** DELETE FROM THIS !!!!!!!!!
 */
@@ -75,35 +70,29 @@ typedef struct	s_node
 	char		charact;
 }				t_node;
 
-void	ft_putchar(char c);
+int		ft_putchar(char c);
 int		ft_putstr(char const *s);
-void	ft_putnbr(int n);
 int		ft_printf(const char *format, ...);
 int		read_or_print(const char *format, t_node **value, va_list ap);
-void	fill_struct(const char *format, t_node **value);
+void	fill_struct(const char *format, t_node **value, va_list ap);
 void	read_argument(t_node **value, va_list ap);
 void	bzero_struct(t_node **value);
 void	search_finish(const char *format, t_node **value);
 void	search_type(const char *format, t_node **value);
 void	search_length(const char *format, t_node **value);
 void	search_flag(const char *format, t_node **value);
-void	search_width(const char *format, t_node **value);
-void	search_precision(const char *format, t_node **value);
-void	sort_flags(t_node **value);
+void	search_width(const char *format, t_node **value, va_list ap);
+void	search_precision(const char *format, t_node **value, va_list ap);
 intmax_t	get_int(t_node **value, va_list ap);
 uintmax_t	get_unsigned(t_node **value, va_list ap);
-void	read_ou(t_node **value, va_list ap);
 void	read_str(t_node **value, va_list ap);
 void	read_char(t_node **value, va_list ap);
 void	format_value(t_node **value);
-void	add_flags(t_node **value);
 void	add_prcsn(t_node **value);
 void	cut_prcsn(t_node **value);
 void	add_width(t_node **value);
-void	add_flag_minus(t_node **value);
 void	add_flag_plus(t_node **value);
 void	add_flag_space(t_node **value);
-void	add_flag_zero(t_node **value);
 void	add_flag_hash(t_node **value);
 char	*ft_itoa_base(ssize_t val, int base, t_node **value);
 char	*ft_uitoa_base(size_t val, int base, t_node **value);

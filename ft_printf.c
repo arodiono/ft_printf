@@ -35,7 +35,7 @@ void	read_argument(t_node **value, va_list ap)
 	}
 }
 
-void	fill_struct(const char *format, t_node **value)
+void	fill_struct(const char *format, t_node **value, va_list ap)
 {
 	char *s;
 
@@ -48,9 +48,22 @@ void	fill_struct(const char *format, t_node **value)
 	if (TYPE == 'c' || TYPE == 'C')
 		STR = "";
 	search_flag(format, &*value);
-	search_width(format, &*value);
-	search_precision(format, &*value);
+	search_width(format, &*value, ap);
+	search_precision(format, &*value, ap);
 	search_length(format, &*value);
+}
+
+int read_form(const char *format, t_node **value, va_list ap)
+{
+	int r;
+
+	fill_struct(format, &*value, ap);
+	read_argument(&*value, ap);
+	format_value(&*value);
+	r = ft_putstr(STR);
+	if ((TYPE == 'c' || TYPE == 'C') && CHR == 0)
+		r += ft_putchar('\0');
+	return (r);
 }
 
 int	read_or_print(const char *format, t_node **value, va_list ap)
@@ -64,34 +77,20 @@ int	read_or_print(const char *format, t_node **value, va_list ap)
 	{
 		if (format[i] == '%' && format[i + 1] == '%')
 		{
-			ft_putchar('%');
+			r += ft_putchar('%');
 			i += 2;
-			r += 1;
 		}
 		else if (format[0] == '%' && format[1] == '\0')
 			break ;
 		else if (format[i] == '%')
 		{
 			STRT = i;
-			fill_struct(format, &*value);
-			read_argument(&*value, ap);
-			// PRINT_STRUCT
-			format_value(&*value);
-			// PRINT_STRUCT
-			r += ft_putstr(STR);
-			if ((TYPE == 'c' || TYPE == 'C') && CHR == 0)
-			{
-				write(1, "\0", 1);
-				r += 1;
-			}
+			r += read_form(format, &*value, ap);
 			i = FNSH + 1;
 			bzero_struct(&*value);
 		}
 		else
-		{
-			r += 1;
-			ft_putchar(format[i++]);
-		}
+			r += ft_putchar(format[i++]);
 	}
 	return (r);
 }
