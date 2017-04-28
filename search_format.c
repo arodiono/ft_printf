@@ -18,7 +18,7 @@ void	search_finish(const char *format, t_node **value)
 	int x;
 	int i;
 
-	s = "sSpdDioOuUxXcChljz-+ #0123456789.*";
+	s = "sSpdDioOuUxXcChljz-+ #0123456789.*n";
 	x = STRT + 1;
 	i = 0;
 	while (format[x] != '\0')
@@ -47,7 +47,7 @@ void	search_type(const char *format, t_node **value)
 	int		r;
 	char	*types;
 
-	types = "sSpdDioOuUxXcC";
+	types = "sSpdDioOuUxXcCn";
 	r = STRT;
 	while (r < FNSH)
 	{

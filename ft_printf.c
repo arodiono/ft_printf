@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-void	read_argument(t_node **value, va_list ap)
+void	read_argument(t_node **value, va_list ap, int r)
 {
 	if (TYPE == 'd' || TYPE == 'i' || TYPE == 'D')
 		STR = ft_itoa_base(INT = get_int(&*value, ap), 10, &*value);
@@ -33,6 +33,8 @@ void	read_argument(t_node **value, va_list ap)
 		STR = ft_uitoa_base(UINT = get_pointer(ap), 16, &*value);
 		FLG += HASH;
 	}
+	else if (TYPE == 'n')
+		get_n(ap, r);
 }
 
 void	fill_struct(const char *format, t_node **value, va_list ap)
@@ -53,14 +55,16 @@ void	fill_struct(const char *format, t_node **value, va_list ap)
 	search_length(format, &*value);
 }
 
-int read_form(const char *format, t_node **value, va_list ap)
+int read_form(const char *format, t_node **value, va_list ap, int r)
 {
-	int r;
+
 
 	fill_struct(format, &*value, ap);
-	read_argument(&*value, ap);
+	read_argument(&*value, ap, r);
 	format_value(&*value);
-	r = ft_putstr(STR);
+	// PRINT_STRUCT
+	if (TYPE != 'n')
+		r = ft_putstr(STR);
 	if ((TYPE == 'c' || TYPE == 'C') && CHR == 0)
 		r += ft_putchar('\0');
 	return (r);
@@ -85,7 +89,7 @@ int	read_or_print(const char *format, t_node **value, va_list ap)
 		else if (format[i] == '%')
 		{
 			STRT = i;
-			r += read_form(format, &*value, ap);
+			r += read_form(format, &*value, ap, r);
 			i = FNSH + 1;
 			bzero_struct(&*value);
 		}
@@ -118,6 +122,7 @@ int		ft_printf(const char *format, ...)
 
 	value = (t_node *)malloc(sizeof(t_node));
 	bzero_struct(&value);
+	value->n = 0;
 	va_start(ap, format);
 	i = read_or_print(format, &value, ap);
 	va_end(ap);

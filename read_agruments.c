@@ -60,6 +60,15 @@ unsigned long	get_pointer(va_list ap)
 	return(va_arg(ap, unsigned long));
 }
 
+void	get_n(va_list ap, int r)
+{
+	int *n;
+
+	n = (int *)malloc(sizeof(int));
+	n = (va_arg(ap, int*));
+	*n = r;
+}
+
 void	read_str(t_node **value, va_list ap)
 {
 	char *str;

@@ -68,6 +68,8 @@ typedef struct	s_node
 	size_t		uint_value;
 	char		*string;
 	char		charact;
+	size_t		n;
+
 }				t_node;
 
 int		ft_putchar(char c);
@@ -75,7 +77,7 @@ int		ft_putstr(char const *s);
 int		ft_printf(const char *format, ...);
 int		read_or_print(const char *format, t_node **value, va_list ap);
 void	fill_struct(const char *format, t_node **value, va_list ap);
-void	read_argument(t_node **value, va_list ap);
+void	read_argument(t_node **value, va_list ap, int r);
 void	bzero_struct(t_node **value);
 void	search_finish(const char *format, t_node **value);
 void	search_type(const char *format, t_node **value);
@@ -98,7 +100,7 @@ char	*ft_itoa_base(ssize_t val, int base, t_node **value);
 char	*ft_uitoa_base(size_t val, int base, t_node **value);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_strlen(const char *str);
-
+void	get_n(va_list ap, int r);
 void	format_decimal(t_node **value);
 void	format_hexadecimal(t_node **value);
 void	format_unsigned(t_node **value);
