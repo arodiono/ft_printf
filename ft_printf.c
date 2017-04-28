@@ -23,13 +23,13 @@ void	read_argument(t_node **value, va_list ap, int r)
 	else if (TYPE == 'o' || TYPE == 'O')
 		STR = ft_uitoa_base(UINT = get_unsigned(&*value, ap), 8, &*value);
 	else if (TYPE == 's' && LNGTH != 'l')
-		read_str(&*value, ap);
+		get_string(&*value, ap);
 	else if ((TYPE == 's' && LNGTH == 'l') || TYPE == 'S')
-		read_wchar(&*value, ap);
+		get_wchar_string(&*value, ap);
 	else if (TYPE == 'c' && LNGTH != 'l')
-		read_char(&*value, ap);
+		get_char(&*value, ap);
 	else if ((TYPE == 'c' && LNGTH == 'l') || TYPE == 'C')
-		read_wint(&*value, ap);
+		get_wchar(&*value, ap);
 	else if (TYPE == 'p')
 	{
 		STR = ft_uitoa_base(UINT = get_pointer(ap), 16, &*value);
@@ -41,13 +41,10 @@ void	read_argument(t_node **value, va_list ap, int r)
 
 void	fill_struct(const char *format, t_node **value, va_list ap)
 {
-	char *s;
-
 	search_finish(format, &*value);
-	s = (char *)malloc(sizeof(char));
-	s[0] = format[FNSH];
-	s[1] = '\0';
-	STR = s;
+	STR = (char *)malloc(sizeof(char));
+	STR[0] = format[FNSH];
+	STR[1] = '\0';
 	search_type(format, &*value);
 	if (TYPE == 'c' || TYPE == 'C')
 		STR = "";
@@ -57,12 +54,11 @@ void	fill_struct(const char *format, t_node **value, va_list ap)
 	search_length(format, &*value);
 }
 
-int read_form(const char *format, t_node **value, va_list ap, int r)
+int		read_form(const char *format, t_node **value, va_list ap, int r)
 {
 	fill_struct(format, &*value, ap);
 	read_argument(&*value, ap, r);
 	format_value(&*value);
-
 	if (TYPE != 'n')
 		r = ft_putstr(STR);
 	if ((TYPE == 'c' || TYPE == 'C') && CHR == 0)
@@ -70,7 +66,7 @@ int read_form(const char *format, t_node **value, va_list ap, int r)
 	return (r);
 }
 
-int	read_or_print(const char *format, t_node **value, va_list ap)
+int		read_or_print(const char *format, t_node **value, va_list ap)
 {
 	int i;
 	int r;
@@ -99,30 +95,14 @@ int	read_or_print(const char *format, t_node **value, va_list ap)
 	return (r);
 }
 
-void	bzero_struct(t_node **value)
-{
-	STRT = 0;
-	FNSH = 0;
-	FLG = 0;
-	WDTH = 0;
-	PRCSN = -1;
-	LNGTH = 0;
-	TYPE = 0;
-	INT = 0;
-	UINT = 0;
-	STR = "";
-	(*value)->charact = -1;
-}
-
 int		ft_printf(const char *format, ...)
 {
-	int i;
+	int		i;
 	va_list	ap;
 	t_node	*value;
 
 	value = (t_node *)malloc(sizeof(t_node));
 	bzero_struct(&value);
-	value->n = 0;
 	va_start(ap, format);
 	i = read_or_print(format, &value, ap);
 	va_end(ap);

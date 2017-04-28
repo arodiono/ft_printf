@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnew.c                                        :+:      :+:    :+:   */
+/*   ft_strdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arodiono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/28 22:15:55 by arodiono          #+#    #+#             */
-/*   Updated: 2016/12/02 15:22:34 by arodiono         ###   ########.fr       */
+/*   Created: 2016/11/29 14:06:39 by arodiono          #+#    #+#             */
+/*   Updated: 2016/11/29 14:06:41 by arodiono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*ft_strnew(size_t size)
+void	ft_strdel(char **as)
 {
-	char *str;
-
-	str = (char*)malloc(size + 1);
-	if (str == NULL)
-		return (NULL);
-	size++;
-	while (size-- > 0)
-		str[size] = '\0';
-	return (str);
+	if (as != NULL)
+	{
+		free(*as);
+		*as = NULL;
+	}
 }

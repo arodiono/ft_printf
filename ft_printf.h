@@ -24,7 +24,6 @@
 # define UINT	(*value)->uint_value
 # define STR	(*value)->string
 # define CHR	(*value)->charact
-
 # define ZERO	1
 # define PLUS	2
 # define MINUS	4
@@ -68,12 +67,13 @@ typedef struct	s_node
 	size_t		uint_value;
 	char		*string;
 	char		charact;
-	size_t		n;
 
 }				t_node;
 
 int		ft_putchar(char c);
 int		ft_putstr(char const *s);
+char	*ft_strnew(size_t size);
+void	ft_strdel(char **as);
 int		ft_printf(const char *format, ...);
 int		read_or_print(const char *format, t_node **value, va_list ap);
 void	fill_struct(const char *format, t_node **value, va_list ap);
@@ -87,8 +87,8 @@ void	search_width(const char *format, t_node **value, va_list ap);
 void	search_precision(const char *format, t_node **value, va_list ap);
 intmax_t	get_int(t_node **value, va_list ap);
 uintmax_t	get_unsigned(t_node **value, va_list ap);
-void	read_str(t_node **value, va_list ap);
-void	read_char(t_node **value, va_list ap);
+void	get_string(t_node **value, va_list ap);
+void	get_char(t_node **value, va_list ap);
 void	format_value(t_node **value);
 void	add_prcsn(t_node **value);
 void	cut_prcsn(t_node **value);
@@ -107,9 +107,11 @@ void	format_unsigned(t_node **value);
 void	format_octal(t_node **value);
 void	format_string(t_node **value);
 void	format_char(t_node **value);
-void	read_wint(t_node **value, va_list ap);
-void	read_wchar(t_node **value, va_list ap);
+void	get_wchar(t_node **value, va_list ap);
+void	get_wchar_string(t_node **value, va_list ap);
 void	format_pointer(t_node **value);
+void	process_wchar(wint_t val, t_node **value);
+void	set_bits(t_node **value, char c);
 
 unsigned long	get_pointer(va_list ap);
 

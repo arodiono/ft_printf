@@ -12,35 +12,6 @@
 
 #include "ft_printf.h"
 
-void	search_finish(const char *format, t_node **value)
-{
-	char *s;
-	int x;
-	int i;
-
-	s = "sSpdDioOuUxXcChljz-+ #0123456789.*n";
-	x = STRT + 1;
-	i = 0;
-	while (format[x] != '\0')
-	{
-		while (s[i] != '\0')
-		{
-			if (format[x] != s[i])
-				i++;
-			else if (format[x] == s[i])
-			{
-				x++;
-				i = 0;
-			}
-		}
-		if (s[i] == '\0')
-		{
-			FNSH = x;
-			return ;
-		}
-	}
-}
-
 void	search_type(const char *format, t_node **value)
 {
 	int		i;
@@ -139,7 +110,8 @@ void	search_width(const char *format, t_node **value, va_list ap)
 	r = STRT;
 	while (r <= FNSH)
 	{
-		if (((format[r] > '0' && format[r] <= '9') || format[r] == '*') && format[r - 1] != '.')
+		if (((format[r] > '0' && format[r] <= '9') || format[r] == '*') \
+			&& format[r - 1] != '.')
 		{
 			WDTH = 0;
 			while (format[r] >= '0' && format[r] <= '9')
@@ -158,40 +130,6 @@ void	search_width(const char *format, t_node **value, va_list ap)
 		}
 		r++;
 	}
-}
-
-void	print_bits(unsigned char octet)
-{
-	unsigned char	i;
-	int 			n;
-
-	n = 8;
-	i = 128;
-	while (n--)
-	{
-		if (octet >= i)
-		{
-			write(1, "1", 1);
-			octet -= i;
-		}
-		else
-			write(1, "0", 1);
-		i /= 2;
-	}
-}
-
-void	set_bits(t_node **value, char c)
-{
-	if (c == '0' && ((FLG & ZERO) != ZERO))
-		FLG += ZERO;
-	else if (c == '+' && ((FLG & PLUS) != PLUS))
-		FLG += PLUS;
-	else if (c == '-' && ((FLG & MINUS) != MINUS))
-		FLG += MINUS;
-	else if (c == '#' && ((FLG & HASH) != HASH))
-		FLG += HASH;
-	else if (c == ' ' && ((FLG & SPACE) != SPACE))
-		FLG += SPACE;
 }
 
 void	search_flag(const char *frm, t_node **value)
