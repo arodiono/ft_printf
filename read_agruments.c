@@ -72,22 +72,14 @@ void	get_n(va_list ap, int r)
 void	read_str(t_node **value, va_list ap)
 {
 	char *str;
-	wchar_t *s;
 
 	str = "";
-	if (TYPE == 'S' || LNGTH == 'l')
-	{
-		s = va_arg(ap, wchar_t*);
-	}
+	if (LNGTH == 0)
+		str = va_arg(ap, char*);
+	if (str == NULL)
+		STR = NULL;
 	else
-	{
-		if (LNGTH == 0)
-			str = va_arg(ap, char*);
-		if (str == NULL)
-			STR = NULL;
-		else
-			STR = str;
-	}
+		STR = str;
 }
 void	read_char(t_node **value, va_list ap)
 {
@@ -155,33 +147,62 @@ void	four_wchar(t_node **value, unsigned int v)
 	STR = s;
 }
 
-void	read_wchar(t_node **value, va_list ap)
+void	process_wchar(wint_t val, t_node **value)
 {
 	char *s;
-	wchar_t val;
 	unsigned char octet;
 	unsigned int v;
 	int size;
 
-	val = va_arg(ap, wchar_t);
+	v = val;
+	size = check_size((unsigned int)val);
+	if (size <= 7)
+	{
+		octet = val;
+		s = (char *)malloc(sizeof(char) + 1);
+		s[0] = octet;
+		STR = s;
+	}
+	else  if (size <= 11)
+		two_wchar(&*value, v);
+	else  if (size <= 16)
+		three_wchar(&*value, v);
+	else
+		four_wchar(&*value, v);
+}
+
+void	read_wint(t_node **value, va_list ap)
+{
+	wint_t val;
+
+
+	val = va_arg(ap, wint_t);
 	if (val == 0)
 		CHR = 0;
 	else
+		process_wchar(val, &*value);
+}
+
+void	read_wchar(t_node **value, va_list ap)
+{
+	wchar_t *str;
+	char *res;
+	wint_t c;
+
+	res = "";
+	str = va_arg(ap, wchar_t*);
+	if (str == NULL)
+		res = NULL;
+	else
 	{
-		v = val;
-		size = check_size((unsigned int)val);
-		if (size <= 7)
+		while (*str)
 		{
-			octet = val;
-			s = (char *)malloc(sizeof(char) + 1);
-			s[0] = octet;
-			STR = s;
+
+			c = (wint_t)*str;
+			process_wchar(c, &*value);
+			res = ft_strjoin(res, STR);
+			str++;
 		}
-		else  if (size <= 11)
-			two_wchar(&*value, v);
-		else  if (size <= 16)
-			three_wchar(&*value, v);
-		else
-			four_wchar(&*value, v);
 	}
+	STR = res;
 }

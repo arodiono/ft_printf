@@ -81,7 +81,7 @@ void	format_value(t_node **value)
 		format_unsigned(&*value);
 	else if (TYPE == 'o' || TYPE == 'O')
 		format_octal(&*value);
-	else if (TYPE == 's')
+	else if (TYPE == 's' || TYPE == 'S')
 		format_string(&*value);
 	else if (TYPE == 'c')
 		format_char(&*value);

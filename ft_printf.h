@@ -107,6 +107,7 @@ void	format_unsigned(t_node **value);
 void	format_octal(t_node **value);
 void	format_string(t_node **value);
 void	format_char(t_node **value);
+void	read_wint(t_node **value, va_list ap);
 void	read_wchar(t_node **value, va_list ap);
 void	format_pointer(t_node **value);
 
