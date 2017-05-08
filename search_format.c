@@ -45,17 +45,15 @@ void	search_length(const char *format, t_node **value)
 
 	length = "hljz";
 	r = STRT;
-	while (r <= FNSH)
+	while (r++ <= FNSH)
 	{
-		i = 0;
-		while (length[i] != '\0')
+		i = -1;
+		while (length[++i] != '\0')
 		{
 			if (format[r] == length[i] && format[r + 1] == length[i])
 			{
-				if (length[i] == 'h')
-					LNGTH = 'H';
-				else if (length[i] == 'l')
-					LNGTH = 'Z';
+				length[i] == 'h' ? LNGTH = 'H' : LNGTH;
+				length[i] == 'l' ? LNGTH = 'Z' : LNGTH;
 				return ;
 			}
 			else if (length[i] == format[r])
@@ -63,9 +61,7 @@ void	search_length(const char *format, t_node **value)
 				LNGTH = format[r];
 				return ;
 			}
-			i++;
 		}
-		r++;
 	}
 }
 
@@ -74,13 +70,12 @@ void	search_precision(const char *format, t_node **value, va_list ap)
 	int		r;
 
 	r = STRT;
-	while (r <= FNSH)
+	while (r++ <= FNSH)
 	{
 		if (format[r] == '.')
 		{
-			r++;
 			PRCSN = 0;
-			if (format[r] == '*')
+			if (format[++r] == '*')
 			{
 				if ((PRCSN = va_arg(ap, int)) < 0)
 				{
@@ -91,15 +86,11 @@ void	search_precision(const char *format, t_node **value, va_list ap)
 				return ;
 			}
 			while (format[r] >= '0' && format[r] <= '9')
-			{
-				PRCSN = PRCSN * 10 + format[r] - '0';
-				r++;
-			}
+				PRCSN = PRCSN * 10 + format[r++] - '0';
 			if (format[r] > '0' && format[r] < '9')
 				PRCSN = 0;
 			return ;
 		}
-		r++;
 	}
 }
 

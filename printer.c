@@ -18,7 +18,7 @@ int	ft_putchar(char c)
 	return (1);
 }
 
-int		ft_putstr(char const *s)
+int	ft_putstr(char const *s)
 {
 	int i;
 

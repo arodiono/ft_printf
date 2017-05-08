@@ -10,16 +10,27 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libftprintf.a
-FLAGS = -Wall -Werror -Wextra
-SRC = format_string.c search_format.c printer.c ft_strlen.c \
-		ft_strjoin.c ft_printf.c ft_itoa_base.c flags.c util.c \
-		get_char_and_string.c get_int_and_unsigned.c w_char.c \
-		format_tools.c
+NAME	=	libftprintf.a
 
-OSRC =	$(SRC:.c=.o)
+FLAGS	=	-Wextra -Wall -Werror
 
-all: $(NAME)
+SRC		=	format_string.c \
+			search_format.c \
+			printer.c \
+			ft_strlen.c \
+			ft_strjoin.c \
+			ft_printf.c \
+			ft_itoa_base.c \
+			flags.c util.c \
+			get_char_and_string.c \
+			get_int_and_unsigned.c \
+			w_char.c \
+			format_tools.c \
+			format_numbs.c
+
+OSRC	=	$(SRC:.c=.o)
+
+all:	$(NAME)
 
 $(NAME): $(OSRC)
 	ar rc libftprintf.a $(OSRC)

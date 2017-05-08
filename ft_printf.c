@@ -15,13 +15,13 @@
 void	read_argument(t_node **value, va_list ap, int r)
 {
 	if (TYPE == 'd' || TYPE == 'i' || TYPE == 'D')
-		STR = ft_itoa_base(INT = get_int(&*value, ap), 10, &*value);
+		STR = ft_itoa_base(get_int(&*value, ap), 10, &*value);
 	else if (TYPE == 'x' || TYPE == 'X')
-		STR = ft_uitoa_base(UINT = get_unsigned(&*value, ap), 16, &*value);
+		STR = ft_uitoa_base(get_unsigned(&*value, ap), 16, &*value);
 	else if (TYPE == 'u' || TYPE == 'U')
-		STR = ft_uitoa_base(UINT = get_unsigned(&*value, ap), 10, &*value);
+		STR = ft_uitoa_base(get_unsigned(&*value, ap), 10, &*value);
 	else if (TYPE == 'o' || TYPE == 'O')
-		STR = ft_uitoa_base(UINT = get_unsigned(&*value, ap), 8, &*value);
+		STR = ft_uitoa_base(get_unsigned(&*value, ap), 8, &*value);
 	else if (TYPE == 's' && LNGTH != 'l')
 		get_string(&*value, ap);
 	else if ((TYPE == 's' && LNGTH == 'l') || TYPE == 'S')
@@ -32,7 +32,7 @@ void	read_argument(t_node **value, va_list ap, int r)
 		get_wchar(&*value, ap);
 	else if (TYPE == 'p')
 	{
-		STR = ft_uitoa_base(UINT = get_pointer(ap), 16, &*value);
+		STR = ft_uitoa_base(get_pointer(&*value, ap), 16, &*value);
 		FLG += HASH;
 	}
 	else if (TYPE == 'n')
